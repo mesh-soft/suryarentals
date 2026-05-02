@@ -6,7 +6,7 @@
     "baseUrl": "https://example.com",
     "locale": "en_IN",
     "currency": "INR",
-    "city": "Jaipur",
+    "city": "Udaipur",
     "region": "Rajasthan",
     "country": "IN",
     "phone": "+919509608707",
@@ -18,7 +18,7 @@
     "keywords": [
       "self drive car rental",
       "Surya self drive car rental",
-      "self drive car rental Jaipur",
+      "self drive car rental Udaipur",
       "Thar self drive rental",
       "Scorpio self drive rental",
       "car rental without driver",
@@ -118,7 +118,7 @@
           "24h": 5000
         },
         "images": [
-          "assets/images/cars/new-verna/hero.jpg"
+          "assets/images/cars/new-verna/verna.png"
         ]
       },
       {

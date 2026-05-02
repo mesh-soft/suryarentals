@@ -43,9 +43,13 @@ const server = http.createServer(async (request, response) => {
   try {
     await building;
     const url = new URL(request.url, `http://localhost:${port}`);
-    const cleanPath = path.normalize(decodeURIComponent(url.pathname)).replace(/^(\.\.[/\\])+/, "");
-    const requested = path.join(root, cleanPath === "/" ? "index.html" : cleanPath);
-    const filePath = requested.startsWith(root) ? requested : path.join(root, "index.html");
+    const pathname = decodeURIComponent(url.pathname);
+    const relativePath = pathname.replace(/^[/\\]+/, "");
+    const normalizedPath = path.normalize(relativePath);
+    const cleanPath = (normalizedPath === "." ? "" : normalizedPath).replace(/^(\.\.(?:[/\\]|$))+/, "");
+    const requested = path.resolve(root, cleanPath || "index.html");
+    const rootPrefix = root.endsWith(path.sep) ? root : `${root}${path.sep}`;
+    const filePath = requested === root || requested.startsWith(rootPrefix) ? requested : path.join(root, "index.html");
     const body = await fs.readFile(filePath);
     response.writeHead(200, { "content-type": types[path.extname(filePath)] || "application/octet-stream" });
     response.end(body);
