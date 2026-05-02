@@ -57,7 +57,7 @@ const server = http.createServer(async (request, response) => {
 
 const listen = () => {
   server.listen(port, () => {
-    console.log(`Preview: http://localhost:${port}`);
+    console.log(`Preview: http://127.0.0.1:${port}`);
     console.log("Watching config/site.json and assets for changes...");
   });
 };
