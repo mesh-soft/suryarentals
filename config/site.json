@@ -1,0 +1,243 @@
+{
+  "site": {
+    "name": "Surya Self Drive Car Rental",
+    "tagline": "Self drive car rental with instant booking, doorstep delivery, and no hidden charges.",
+    "description": "Book Thar, Scorpio, Verna, Amaze, i20, Swift, Brezza, Venue and more self drive cars from Surya Self Drive Car Rental. 12 hour and 24 hour packages with clear kilometre limits.",
+    "baseUrl": "https://example.com",
+    "locale": "en_IN",
+    "currency": "INR",
+    "city": "Jaipur",
+    "region": "Rajasthan",
+    "country": "IN",
+    "phone": "+919509608707",
+    "displayPhone": "9509608707",
+    "email": "thesuryacarrentals@gmail.com",
+    "whatsapp": "919509608707",
+    "primaryCta": "Book now",
+    "secondaryCta": "Call for availability",
+    "keywords": [
+      "self drive car rental",
+      "Surya self drive car rental",
+      "self drive car rental Jaipur",
+      "Thar self drive rental",
+      "Scorpio self drive rental",
+      "car rental without driver",
+      "doorstep car delivery",
+      "instant car booking"
+    ]
+  },
+  "booking": {
+    "leadEmailSubject": "New car rental enquiry",
+    "formEndpoint": "",
+    "defaultPickupArea": "",
+    "terms": [
+      "12 hour package includes 150 km.",
+      "24 hour package includes 300 km.",
+      "Extra kilometres, fuel policy, refundable security, and ID requirements can be confirmed during booking."
+    ]
+  },
+  "trustBadges": [
+    {
+      "title": "No hidden charges",
+      "text": "Transparent 12 hour and 24 hour prices before you book."
+    },
+    {
+      "title": "Instant booking",
+      "text": "Send your trip details on WhatsApp and get quick availability."
+    },
+    {
+      "title": "Doorstep delivery",
+      "text": "Ask for delivery to your home, hotel, office, or pickup point."
+    }
+  ],
+  "packages": {
+    "limits": {
+      "12h": "150 km",
+      "24h": "300 km"
+    },
+    "cars": [
+      {
+        "name": "Mahindra Thar",
+        "slug": "thar",
+        "category": "SUV",
+        "fuel": "Diesel",
+        "seats": 4,
+        "transmission": "Manual",
+        "highlight": "Adventure-ready SUV for weekend drives and city presence.",
+        "pricing": {
+          "12h": 3000,
+          "24h": 5000
+        },
+        "images": [
+          "assets/images/cars/thar/hero.jpg",
+          "assets/images/cars/thar/side.jpg"
+        ]
+      },
+      {
+        "name": "Scorpio S11",
+        "slug": "scorpio-s11",
+        "category": "SUV",
+        "fuel": "Diesel",
+        "seats": 7,
+        "transmission": "Manual",
+        "highlight": "Spacious SUV for family travel and long routes.",
+        "pricing": {
+          "12h": 4000,
+          "24h": 6000
+        },
+        "images": [
+          "assets/images/cars/scorpio-s11/hero.jpg"
+        ]
+      },
+      {
+        "name": "Scorpio N",
+        "slug": "scorpio-n",
+        "category": "SUV",
+        "fuel": "Diesel",
+        "seats": 7,
+        "transmission": "Manual",
+        "highlight": "Premium SUV comfort with strong road presence.",
+        "pricing": {
+          "12h": 4000,
+          "24h": 6000
+        },
+        "images": [
+          "assets/images/cars/scorpio-n/hero.jpg"
+        ]
+      },
+      {
+        "name": "New Verna",
+        "slug": "new-verna",
+        "category": "Sedan",
+        "fuel": "Petrol",
+        "seats": 5,
+        "transmission": "Manual",
+        "highlight": "Comfortable sedan for business trips and highway drives.",
+        "pricing": {
+          "12h": 3000,
+          "24h": 5000
+        },
+        "images": [
+          "assets/images/cars/new-verna/hero.jpg"
+        ]
+      },
+      {
+        "name": "Honda Amaze",
+        "slug": "honda-amaze",
+        "category": "Compact sedan",
+        "fuel": "Petrol",
+        "seats": 5,
+        "transmission": "Manual",
+        "highlight": "Economical compact sedan for city and short trips.",
+        "pricing": {
+          "12h": 2000,
+          "24h": 3000
+        },
+        "images": [
+          "assets/images/cars/honda-amaze/hero.jpg"
+        ]
+      },
+      {
+        "name": "Hyundai i20",
+        "slug": "i20",
+        "category": "Hatchback",
+        "fuel": "Petrol",
+        "seats": 5,
+        "transmission": "Manual",
+        "highlight": "Premium hatchback for easy city movement.",
+        "pricing": {
+          "12h": 2000,
+          "24h": 3000
+        },
+        "images": [
+          "assets/images/cars/i20/i20_sports.jpeg",
+          "assets/images/cars/i20/i20_sports1.jpeg",
+          "assets/images/cars/i20/i20_sports2.jpeg"
+        ]
+      },
+      {
+        "name": "New Black Swift",
+        "slug": "new-black-swift",
+        "category": "Hatchback",
+        "fuel": "Petrol",
+        "seats": 5,
+        "transmission": "Manual",
+        "highlight": "Stylish, compact, and easy to park.",
+        "pricing": {
+          "12h": 2000,
+          "24h": 3000
+        },
+        "images": [
+          "assets/images/cars/new-black-swift/hero.jpg"
+        ]
+      },
+      {
+        "name": "Brezza Diesel",
+        "slug": "brezza-diesel",
+        "category": "Compact SUV",
+        "fuel": "Diesel",
+        "seats": 5,
+        "transmission": "Manual",
+        "highlight": "Diesel compact SUV with efficient highway running.",
+        "pricing": {
+          "12h": 2500,
+          "24h": 3500
+        },
+        "images": [
+          "assets/images/cars/brezza-diesel/hero.jpg"
+        ]
+      },
+      {
+        "name": "New Venue",
+        "slug": "new-venue",
+        "category": "Compact SUV",
+        "fuel": "Petrol",
+        "seats": 5,
+        "transmission": "Manual",
+        "highlight": "Compact SUV comfort for city and weekend plans.",
+        "pricing": {
+          "12h": 2500,
+          "24h": 3500
+        },
+        "images": [
+          "assets/images/cars/new-venue/hero.jpg"
+        ]
+      }
+    ]
+  },
+  "testimonials": [
+    {
+      "name": "Amit Sharma",
+      "rating": 5,
+      "text": "Clear pricing, quick response, and the car was delivered on time."
+    },
+    {
+      "name": "Priya Singh",
+      "rating": 5,
+      "text": "Good self drive experience. Booking was simple and there were no surprise charges."
+    },
+    {
+      "name": "Rahul Verma",
+      "rating": 5,
+      "text": "Clean car and helpful service. Recommended for weekend trips."
+    }
+  ],
+  "faq": [
+    {
+      "question": "What is included in the 12 hour package?",
+      "answer": "The 12 hour package includes a 150 km limit. Confirm extra kilometre charges and fuel policy while booking."
+    },
+    {
+      "question": "What is included in the 24 hour package?",
+      "answer": "The 24 hour package includes a 300 km limit. Extra kilometres can be confirmed before your trip."
+    },
+    {
+      "question": "Can I book instantly on WhatsApp?",
+      "answer": "Yes. Share your car choice, date, pickup time, and pickup location on WhatsApp for quick availability."
+    },
+    {
+      "question": "Is doorstep delivery available?",
+      "answer": "Doorstep delivery can be requested for home, hotel, office, or another pickup point, subject to availability."
+    }
+  ]
+}

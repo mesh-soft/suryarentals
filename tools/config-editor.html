@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Surya Website JSON Editor</title>
+    <style>
+      :root {
+        --ink: #17202e;
+        --muted: #667085;
+        --line: #d9dee7;
+        --paper: #ffffff;
+        --soft: #f5f6f8;
+        --brand: #b91c1c;
+        --ok: #0f766e;
+        --warn: #b45309;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--soft);
+        color: var(--ink);
+      }
+      button, input, textarea, select { font: inherit; }
+      .app {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        min-height: 100svh;
+      }
+      aside {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        padding: 24px;
+        background: #111827;
+        color: #f9fafb;
+        overflow: auto;
+      }
+      aside h1 { margin: 0 0 8px; font-size: 24px; line-height: 1.1; }
+      aside p { margin: 0 0 22px; color: #cbd5e1; }
+      nav { display: grid; gap: 8px; }
+      nav a {
+        color: #e5e7eb;
+        text-decoration: none;
+        padding: 10px 12px;
+        border-radius: 8px;
+      }
+      nav a:hover { background: rgba(255,255,255,.1); }
+      main { padding: 28px; }
+      .toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px;
+        margin: -28px -28px 24px;
+        background: rgba(245,246,248,.92);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(12px);
+      }
+      .toolbar-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+      .status { color: var(--muted); font-size: 14px; }
+      .section {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 22px;
+        margin-bottom: 18px;
+      }
+      .section h2 { margin: 0 0 4px; font-size: 26px; }
+      .section > p { margin: 0 0 18px; color: var(--muted); }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      label {
+        display: grid;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 750;
+      }
+      input, textarea, select {
+        width: 100%;
+        min-height: 42px;
+        padding: 10px 12px;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+      }
+      textarea { min-height: 84px; resize: vertical; }
+      .wide { grid-column: 1 / -1; }
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: end;
+        margin-bottom: 10px;
+      }
+      .item {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 12px;
+        background: #fbfcfe;
+      }
+      .item-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+      .item-head strong { font-size: 18px; }
+      .mini-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      .btn {
+        min-height: 40px;
+        padding: 0 14px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink);
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .btn-primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+      .btn-ok { background: var(--ok); border-color: var(--ok); color: #fff; }
+      .btn-danger { color: #991b1b; border-color: #fecaca; background: #fff5f5; }
+      .btn-small { min-height: 34px; padding: 0 10px; font-size: 13px; }
+      .json-preview {
+        width: 100%;
+        min-height: 420px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 13px;
+        line-height: 1.45;
+        white-space: pre;
+      }
+      .hint {
+        padding: 12px 14px;
+        border-radius: 8px;
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        color: #7c2d12;
+        margin-bottom: 18px;
+      }
+      @media (max-width: 900px) {
+        .app { grid-template-columns: 1fr; }
+        aside { position: static; height: auto; }
+        nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid { grid-template-columns: 1fr; }
+        .toolbar { position: static; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside>
+        <h1>JSON Editor</h1>
+        <p>Local tool for `config/site.json`.</p>
+        <nav>
+          <a href="#business">Business</a>
+          <a href="#booking">Booking</a>
+          <a href="#badges">Trust badges</a>
+          <a href="#cars">Cars & rates</a>
+          <a href="#testimonials">Testimonials</a>
+          <a href="#faq">FAQ</a>
+          <a href="#seo">SEO lists</a>
+          <a href="#json">JSON preview</a>
+        </nav>
+      </aside>
+      <main>
+        <div class="toolbar">
+          <span class="status" id="status">Loading config...</span>
+          <div class="toolbar-actions">
+            <button class="btn" id="reloadBtn" type="button">Reload</button>
+            <button class="btn" id="copyBtn" type="button">Copy JSON</button>
+            <button class="btn" id="downloadBtn" type="button">Download site.json</button>
+            <button class="btn btn-ok" id="saveBtn" type="button">Save to config/site.json</button>
+          </div>
+        </div>
+
+        <div class="hint">
+          Run this editor with <strong>npm run editor</strong>. After saving, run <strong>npm run build</strong> to regenerate the public website.
+        </div>
+
+        <form id="editor"></form>
+      </main>
+    </div>
+
+    <template id="fieldTemplate">
+      <label>
+        <span></span>
+        <input>
+      </label>
+    </template>
+
+    <script>
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const editor = $("#editor");
+      const statusEl = $("#status");
+      let config = null;
+
+      const textFields = [
+        ["name", "Company name"],
+        ["tagline", "Tagline"],
+        ["description", "Description", "textarea"],
+        ["baseUrl", "Base URL"],
+        ["locale", "Locale"],
+        ["currency", "Currency"],
+        ["city", "City"],
+        ["region", "Region"],
+        ["country", "Country"],
+        ["phone", "Phone with country code"],
+        ["displayPhone", "Display phone"],
+        ["email", "Email"],
+        ["whatsapp", "WhatsApp number"],
+        ["primaryCta", "Primary CTA"],
+        ["secondaryCta", "Secondary CTA"]
+      ];
+
+      const setStatus = (message, tone = "muted") => {
+        statusEl.textContent = message;
+        statusEl.style.color = tone === "ok" ? "var(--ok)" : tone === "warn" ? "var(--warn)" : "var(--muted)";
+      };
+
+      const slugify = (value) =>
+        String(value || "")
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "");
+
+      const field = ({ label, value = "", onInput, type = "text", wide = false, inputMode = "" }) => {
+        const node = document.importNode($("#fieldTemplate").content, true);
+        const labelNode = $("label", node);
+        const caption = $("span", node);
+        const input = $("input", node);
+        caption.textContent = label;
+        if (type === "textarea") {
+          const textarea = document.createElement("textarea");
+          textarea.value = value;
+          textarea.addEventListener("input", () => onInput(textarea.value));
+          input.replaceWith(textarea);
+        } else {
+          input.type = type;
+          input.value = value ?? "";
+          if (inputMode) input.inputMode = inputMode;
+          input.addEventListener("input", () => onInput(type === "number" ? Number(input.value || 0) : input.value));
+        }
+        if (wide) labelNode.classList.add("wide");
+        return node;
+      };
+
+      const section = (id, title, intro = "") => {
+        const node = document.createElement("section");
+        node.className = "section";
+        node.id = id;
+        node.innerHTML = `<h2>${title}</h2>${intro ? `<p>${intro}</p>` : ""}`;
+        editor.appendChild(node);
+        return node;
+      };
+
+      const grid = (root) => {
+        const node = document.createElement("div");
+        node.className = "grid";
+        root.appendChild(node);
+        return node;
+      };
+
+      const renderBusiness = () => {
+        const root = section("business", "Business details", "These fields power the hero, contact links, metadata, and structured data.");
+        const fields = grid(root);
+        textFields.forEach(([key, label, type]) => {
+          fields.appendChild(field({
+            label,
+            value: config.site[key],
+            type: type || "text",
+            wide: key === "tagline" || key === "description",
+            onInput: (value) => {
+              config.site[key] = value;
+              syncPreview();
+            }
+          }));
+        });
+      };
+
+      const renderBooking = () => {
+        const root = section("booking", "Booking settings", "Keep endpoint empty to use WhatsApp lead capture.");
+        const fields = grid(root);
+        [
+          ["leadEmailSubject", "Lead email subject"],
+          ["formEndpoint", "Form endpoint"],
+          ["defaultPickupArea", "Default pickup area"]
+        ].forEach(([key, label]) => {
+          fields.appendChild(field({
+            label,
+            value: config.booking[key],
+            wide: key === "formEndpoint",
+            onInput: (value) => {
+              config.booking[key] = value;
+              syncPreview();
+            }
+          }));
+        });
+        root.appendChild(listEditor({
+          title: "Booking terms",
+          items: config.booking.terms,
+          addLabel: "Add term",
+          renderItem: (value, index, update) => field({
+            label: `Term ${index + 1}`,
+            value,
+            wide: true,
+            onInput: update
+          })
+        }));
+      };
+
+      const renderBadges = () => {
+        const root = section("badges", "Trust badges", "Short promise blocks shown near the top.");
+        root.appendChild(listEditor({
+          title: "Badges",
+          items: config.trustBadges,
+          addLabel: "Add badge",
+          create: () => ({ title: "New badge", text: "" }),
+          renderItem: (item, index) => {
+            const fields = grid(document.createElement("div"));
+            fields.appendChild(field({ label: "Title", value: item.title, onInput: (value) => { item.title = value; syncPreview(); } }));
+            fields.appendChild(field({ label: "Text", value: item.text, onInput: (value) => { item.text = value; syncPreview(); } }));
+            return fields;
+          }
+        }));
+      };
+
+      const renderCars = () => {
+        const root = section("cars", "Cars and rates", "Edit pricing, specs, image paths, and kilometre limits here.");
+        const limitGrid = grid(root);
+        limitGrid.appendChild(field({
+          label: "12 hour kilometre limit",
+          value: config.packages.limits["12h"],
+          onInput: (value) => { config.packages.limits["12h"] = value; syncPreview(); }
+        }));
+        limitGrid.appendChild(field({
+          label: "24 hour kilometre limit",
+          value: config.packages.limits["24h"],
+          onInput: (value) => { config.packages.limits["24h"] = value; syncPreview(); }
+        }));
+        root.appendChild(listEditor({
+          title: "Fleet",
+          items: config.packages.cars,
+          addLabel: "Add car",
+          create: () => ({
+            name: "New Car",
+            slug: "new-car",
+            category: "Car",
+            fuel: "Petrol",
+            seats: 5,
+            transmission: "Manual",
+            highlight: "",
+            pricing: { "12h": 0, "24h": 0 },
+            images: ["assets/images/cars/new-car/hero.jpg"]
+          }),
+          renderItem: (car) => {
+            const container = document.createElement("div");
+            const fields = grid(container);
+            fields.appendChild(field({
+              label: "Name",
+              value: car.name,
+              onInput: (value) => {
+                car.name = value;
+                if (!car.slug) car.slug = slugify(value);
+                syncPreview();
+              }
+            }));
+            fields.appendChild(field({ label: "Slug", value: car.slug, onInput: (value) => { car.slug = slugify(value); syncPreview(); } }));
+            fields.appendChild(field({ label: "Category", value: car.category, onInput: (value) => { car.category = value; syncPreview(); } }));
+            fields.appendChild(field({ label: "Fuel", value: car.fuel, onInput: (value) => { car.fuel = value; syncPreview(); } }));
+            fields.appendChild(field({ label: "Seats", value: car.seats, type: "number", inputMode: "numeric", onInput: (value) => { car.seats = value; syncPreview(); } }));
+            fields.appendChild(field({ label: "Transmission", value: car.transmission, onInput: (value) => { car.transmission = value; syncPreview(); } }));
+            fields.appendChild(field({ label: "12 hour price", value: car.pricing["12h"], type: "number", inputMode: "numeric", onInput: (value) => { car.pricing["12h"] = value; syncPreview(); } }));
+            fields.appendChild(field({ label: "24 hour price", value: car.pricing["24h"], type: "number", inputMode: "numeric", onInput: (value) => { car.pricing["24h"] = value; syncPreview(); } }));
+            fields.appendChild(field({ label: "Highlight", value: car.highlight, type: "textarea", wide: true, onInput: (value) => { car.highlight = value; syncPreview(); } }));
+            fields.appendChild(field({
+              label: "Image paths, one per line",
+              value: (car.images || []).join("\n"),
+              type: "textarea",
+              wide: true,
+              onInput: (value) => {
+                car.images = value.split("\n").map((line) => line.trim()).filter(Boolean);
+                syncPreview();
+              }
+            }));
+            return container;
+          }
+        }));
+      };
+
+      const renderTestimonials = () => {
+        const root = section("testimonials", "Testimonials", "Use exact public review text when available.");
+        root.appendChild(listEditor({
+          title: "Reviews",
+          items: config.testimonials,
+          addLabel: "Add testimonial",
+          create: () => ({ name: "Customer name", rating: 5, text: "" }),
+          renderItem: (item) => {
+            const fields = grid(document.createElement("div"));
+            fields.appendChild(field({ label: "Name", value: item.name, onInput: (value) => { item.name = value; syncPreview(); } }));
+            fields.appendChild(field({ label: "Rating", value: item.rating, type: "number", inputMode: "numeric", onInput: (value) => { item.rating = Math.max(1, Math.min(5, value)); syncPreview(); } }));
+            fields.appendChild(field({ label: "Review text", value: item.text, type: "textarea", wide: true, onInput: (value) => { item.text = value; syncPreview(); } }));
+            return fields;
+          }
+        }));
+      };
+
+      const renderFaq = () => {
+        const root = section("faq", "FAQ", "FAQ entries are rendered on the page and in FAQ schema.");
+        root.appendChild(listEditor({
+          title: "Questions",
+          items: config.faq,
+          addLabel: "Add FAQ",
+          create: () => ({ question: "New question?", answer: "" }),
+          renderItem: (item) => {
+            const fields = grid(document.createElement("div"));
+            fields.appendChild(field({ label: "Question", value: item.question, onInput: (value) => { item.question = value; syncPreview(); } }));
+            fields.appendChild(field({ label: "Answer", value: item.answer, type: "textarea", wide: true, onInput: (value) => { item.answer = value; syncPreview(); } }));
+            return fields;
+          }
+        }));
+      };
+
+      const renderSeo = () => {
+        const root = section("seo", "SEO lists", "These lists help search engines and AI systems understand the business.");
+        const fields = grid(root);
+        fields.appendChild(field({
+          label: "Keywords, one per line",
+          value: config.site.keywords.join("\n"),
+          type: "textarea",
+          wide: true,
+          onInput: (value) => {
+            config.site.keywords = value.split("\n").map((line) => line.trim()).filter(Boolean);
+            syncPreview();
+          }
+        }));
+      };
+
+      const renderJson = () => {
+        const root = section("json", "JSON preview", "Advanced users can inspect or copy the generated JSON here.");
+        const textarea = document.createElement("textarea");
+        textarea.className = "json-preview";
+        textarea.id = "jsonPreview";
+        textarea.spellcheck = false;
+        textarea.addEventListener("change", () => {
+          try {
+            config = JSON.parse(textarea.value);
+            render();
+            setStatus("JSON preview applied.", "ok");
+          } catch (error) {
+            setStatus(`Invalid JSON: ${error.message}`, "warn");
+          }
+        });
+        root.appendChild(textarea);
+      };
+
+      const listEditor = ({ title, items, addLabel, create = () => "", renderItem }) => {
+        const root = document.createElement("div");
+        root.className = "item-list";
+        const heading = document.createElement("div");
+        heading.className = "item-head";
+        heading.innerHTML = `<strong>${title}</strong>`;
+        const add = document.createElement("button");
+        add.className = "btn btn-small";
+        add.type = "button";
+        add.textContent = addLabel;
+        add.addEventListener("click", () => {
+          items.push(create());
+          render();
+          setStatus("Added item. Remember to save.", "warn");
+        });
+        heading.appendChild(add);
+        root.appendChild(heading);
+
+        items.forEach((item, index) => {
+          const wrapper = document.createElement("div");
+          wrapper.className = "item";
+          const head = document.createElement("div");
+          head.className = "item-head";
+          head.innerHTML = `<strong>${item.name || item.title || item.question || `Item ${index + 1}`}</strong>`;
+          const actions = document.createElement("div");
+          actions.className = "mini-actions";
+          [
+            ["Up", () => move(items, index, index - 1)],
+            ["Down", () => move(items, index, index + 1)],
+            ["Delete", () => remove(items, index), "btn-danger"]
+          ].forEach(([label, action, extra]) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = `btn btn-small ${extra || ""}`;
+            button.textContent = label;
+            button.disabled = (label === "Up" && index === 0) || (label === "Down" && index === items.length - 1);
+            button.addEventListener("click", action);
+            actions.appendChild(button);
+          });
+          head.appendChild(actions);
+          wrapper.appendChild(head);
+          wrapper.appendChild(renderItem(item, index, (value) => {
+            items[index] = value;
+            syncPreview();
+          }));
+          root.appendChild(wrapper);
+        });
+        return root;
+      };
+
+      const move = (items, from, to) => {
+        if (to < 0 || to >= items.length) return;
+        items.splice(to, 0, items.splice(from, 1)[0]);
+        render();
+        setStatus("Reordered item. Remember to save.", "warn");
+      };
+
+      const remove = (items, index) => {
+        if (!confirm("Delete this item?")) return;
+        items.splice(index, 1);
+        render();
+        setStatus("Deleted item. Remember to save.", "warn");
+      };
+
+      const syncPreview = () => {
+        const preview = $("#jsonPreview");
+        if (preview) preview.value = JSON.stringify(config, null, 2);
+        setStatus("Unsaved changes.", "warn");
+      };
+
+      const render = () => {
+        editor.innerHTML = "";
+        renderBusiness();
+        renderBooking();
+        renderBadges();
+        renderCars();
+        renderTestimonials();
+        renderFaq();
+        renderSeo();
+        renderJson();
+        syncPreview();
+      };
+
+      const loadConfig = async () => {
+        setStatus("Loading config...");
+        const response = await fetch("/api/site-config");
+        if (!response.ok) throw new Error("Could not load config/site.json. Start with npm run editor.");
+        config = await response.json();
+        render();
+        setStatus("Loaded config/site.json.", "ok");
+      };
+
+      const saveConfig = async () => {
+        const response = await fetch("/api/site-config", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(config, null, 2)
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || "Save failed.");
+        setStatus("Saved to config/site.json. Run npm run build next.", "ok");
+      };
+
+      const downloadJson = () => {
+        const blob = new Blob([JSON.stringify(config, null, 2) + "\n"], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "site.json";
+        link.click();
+        URL.revokeObjectURL(link.href);
+      };
+
+      $("#reloadBtn").addEventListener("click", () => loadConfig().catch((error) => setStatus(error.message, "warn")));
+      $("#saveBtn").addEventListener("click", () => saveConfig().catch((error) => setStatus(error.message, "warn")));
+      $("#downloadBtn").addEventListener("click", downloadJson);
+      $("#copyBtn").addEventListener("click", async () => {
+        await navigator.clipboard.writeText(JSON.stringify(config, null, 2));
+        setStatus("JSON copied to clipboard.", "ok");
+      });
+
+      loadConfig().catch((error) => setStatus(error.message, "warn"));
+    </script>
+  </body>
+</html>
