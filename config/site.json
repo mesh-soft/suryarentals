@@ -29,7 +29,7 @@
   "booking": {
     "leadEmailSubject": "New car rental enquiry",
     "formEndpoint": "",
-    "defaultPickupArea": "",
+    "defaultPickupArea": "Fortune 80. office no.404. University road. udaipur. Raj. 313001",
     "terms": [
       "12 hour package includes 150 km.",
       "24 hour package includes 300 km.",
